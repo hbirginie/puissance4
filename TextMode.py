@@ -41,11 +41,11 @@ while True:
                                         game.playerSymbol(2), scores[1]))
     try:
         move = None
-        while not move:
+        while move is None:
             string = input("Player %s: your move? " % game.playerSymbol(currentPlayer))
             move = inputStringToMove(string.strip())
-            if not move:
-                print("Incorrect entry! Expected format: 'x', space-separated, from 0 to 6.")
+            if move is None:
+                print("Incorrect entry! Expected format: <x>, from 0 to 6.")
             elif not game.canBePlayed(move):
                 print("Invalid move!")
                 move = None
