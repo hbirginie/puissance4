@@ -1,4 +1,3 @@
- 
 class GameState:
     """ Cette classe contient toutes les informations sur l'état d'une partie.
     Attributs: 
@@ -10,7 +9,7 @@ class GameState:
         Liste d'entiers qui contient le plus haut pion déjà jouer par colonnes,
         None si aucun pion n'a été joué.
     hasWon : 
-        L'identifiant du joueur gagnant s'il existe
+        L'identifiant du joueur gagnant s'il existe.
     winningLine : list of (int,int)
         identifie la ligne gagnante si elle existe, None sinon
     nbRemainingMoves : int
@@ -41,8 +40,6 @@ class GameState:
     displayWinner():
         Affiche le gagnant de la partie dans le terminal.
     """
-    
-    
     
     possibleLines = [[(j, i) for j in range(0, 4)]  for i in range(0, 6) ] # les 24 façons de gagner en horizontale : 6 par lignes
     possibleLines += [[(j, i) for j in range(1, 5)]  for i in range(0, 6) ]
@@ -168,10 +165,5 @@ if __name__ == "__main__":
     state = GameState()
     state.play(1,3)
     state.play(2,3)
-
-
-
-    
     state.textDisplay()
     state.displayWinner()
-    
