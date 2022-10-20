@@ -1,17 +1,8 @@
-#!/usr/bin/env python3
-
 from GameState import *
-import sys
-
-# goal : int
-# le nombre de parties gagnantes à atteindre pour terminer le jeu
-# peut être fourni en ligne de commande, valeur par défaut: 5
-goal = int(sys.argv[1]) if len(sys.argv) >= 2 else 5
 
 def inputStringToMove(str):
     """Convertit une chaîne de caractères donnée par l'utilisateur en position à jouer
-    
-    Format attendu: un entier
+    Format attendu: un entier de 0 à 6.
     Renvoit None si l'entrée est invalide.
     """
     try:
@@ -30,6 +21,7 @@ winner = None
 game = GameState()
 currentPlayer = 1
 scores = [0, 0]
+goal = 5
 lastStarter = 1
 
 # Boucle principale: afficher le jeu, demander un coup, le jouer s'il
@@ -45,7 +37,7 @@ while True:
             string = input("Player %s: your move? " % game.playerSymbol(currentPlayer))
             move = inputStringToMove(string.strip())
             if move is None:
-                print("Incorrect entry! Expected format: <x>, from 0 to 6.")
+                print("Incorrect entry! Expected format: an integer from 0 to 6.")
             elif not game.canBePlayed(move):
                 print("Invalid move!")
                 move = None
@@ -60,8 +52,12 @@ while True:
             game = GameState()
             lastStarter = 3 - lastStarter
             currentPlayer = lastStarter
+        if game.isTie():
+            print("Draw !")
+            game = GameState()
+            lastStarter = 3 - lastStarter
+            currentPlayer = lastStarter
     except EOFError:
         print("Game ended prematurely. Current state:")
         game.textDisplay()
         exit(0)
-        
