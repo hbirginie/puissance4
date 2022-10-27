@@ -135,7 +135,6 @@ class GameState:
     
     def playerSymbol(self, player):
         """Renvoie le symbole du joueur dont l'identifiant est <player>.
-        
         Utilise les entiers 1 et 2 pour identifier les joueurs, ou
         None pour "aucun joueur". 
         """
@@ -155,7 +154,10 @@ class GameState:
         """Affiche le gagnant de la partie dans le terminal."""
         w = self.winner()
         if w:
-            print("The winner is: %s" % self.playerSymbol(w))
+            if self.playerSymbol(w)=='O':
+                print("The winner is: O")
+            else:
+                print("The winner is: X")
         else:
             print("The game continues...")
 
