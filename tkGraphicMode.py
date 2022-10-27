@@ -130,8 +130,9 @@ class Board(tk.Canvas):
             
     def onClick(self, event, i):
         if not self.game.canBePlayed(i):
-            print("Vous ne pouvez pas jouer dans la colonne",i)
+            self.winnerText.set("Vous ne pouvez pas jouer dans la colonne !")
         else:
+            self.winnerText.set("")
             winner=self.game.play(self.currentPlayer.get(), i)
             self.playCircle(i)
             self.currentPlayer.set(3 - self.currentPlayer.get())
