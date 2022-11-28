@@ -67,6 +67,8 @@ class GameState:
         self.hasWon = None
         self.winningLine = None
         self.nbRemainingMoves = 42
+        self.lastPlayed = None
+        self.hasUndo = False
 
     def play(self, player, colonne):
         """Joue un coup pour <player> dans la colonne <x>
@@ -78,6 +80,8 @@ class GameState:
         Lève Exception si la position a déjà été jouée.
         Renvoie l'identifiant du gagnant s'il existe après ce coup, None sinon.
         """
+        self.hasUndo = False
+        
         if colonne >= 7:
             raise Exception
         
@@ -88,6 +92,7 @@ class GameState:
 
         if self.canBePlayed(colonne):
             self.grid[colonne][ligne] = player
+            self.lastPlayed = [(colonne,ligne)]
             self.highPlayed[colonne] -= 1
             self.nbRemainingMoves -= 1
             return self.winner()
@@ -97,6 +102,17 @@ class GameState:
         
         ligne=self.highPlayed[colonne]-1
         return not self.grid[colonne][ligne]
+    
+    def undo(self):
+        """Revient au coup précédent."""
+        if self.hasUndo:
+            return
+        self.hasUndo = True
+        colonne = self.lastPlayed[0][0]
+        ligne = self.lastPlayed[0][1]
+        self.grid[colonne][ligne] = None
+        self.highPlayed[colonne] += 1
+        self.nbRemainingMoves += 1
     
     def winner(self):
         """Renvoie l'identifiant du gagnant s'il existe, None sinon. """
@@ -169,3 +185,5 @@ if __name__ == "__main__":
     state.play(2,3)
     state.textDisplay()
     state.displayWinner()
+    state.undo()
+    state.textDisplay()
