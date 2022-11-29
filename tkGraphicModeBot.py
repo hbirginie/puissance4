@@ -28,7 +28,7 @@ class GameFrame(tk.Tk):
     """
     def __init__(self):
         super().__init__()
-        self.title("tkMorpion")
+        self.title("tkPuissance4")
         self.option_add('*tearOff', False)
         
         self.initUI()
