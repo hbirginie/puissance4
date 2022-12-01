@@ -156,9 +156,9 @@ class Board(tk.Canvas):
         self.winnerText.set("")
         self.game = GameState()
         self.drawGrid()
-        self.makeArrows()
-        self.lastStarter = 3 - self.lastStarter
-        self.currentPlayer.set(self.lastStarter)
+        if self.currentPlayer.get()==2:
+            self.bot()
+        
         
     def restartGame(self):
         """Recommence la partie à zéro, en effaçant les scores."""
@@ -241,19 +241,54 @@ class Board(tk.Canvas):
             self.newGame()
             
     def bot(self):
-        """Bot
-        1) Joue un coup aléatoire
-        """
-        # si personne n'a joue au milieu : jouer au milieu
-        # 
+        # initialisation du meilleur coup
+        bestplay=None
+        # regarde si un coup est gagnable
+        copygame = self.game.copyGame()
+        for i in range(7):
+            if copygame.canBePlayed(i):
+                copygame.play(self.currentPlayer.get(),i)
+                if copygame.winner():
+                    play=i
+                    if bestplay==None:
+                        #print("win in ", i)
+                        bestplay=play
+                copygame.undo()
+            
+        # regarde si le prochaine coup de l'adversaire est gagnable
+        copygame = self.game.copyGame()
+        for i in range(7):
+            if copygame.canBePlayed(i):
+                copygame.play((3-self.currentPlayer.get()),i)
+                if copygame.winner():
+                    play=i
+                    if bestplay==None:
+                        #print("loose in ", i)
+                        bestplay=play
+                copygame.undo()
         
-        
+        # coup aléatoire
         play=randint(0,6)
         while not self.game.canBePlayed(play):
             play=randint(0,6)
-        print("Le bot joue dans la colonne",play)
-        #self.game.play(self.currentPlayer.get(),play)
-        #self.playCircle(play)
+        
+        # si personne n'a pas joue au milieu : jouer au milieu
+        if self.game.highPlayed[3]==6:
+            play=3
+
+        # si personne n'a pas joue au milieu : jouer au milieu
+        if self.game.highPlayed[3]==5 and self.game.nbRemainingMoves==41:
+            play=2
+        
+        # si il y a un meilleur coup alors le jouer
+        if bestplay!=None:
+            play=bestplay
+            
+        winner=self.game.play(self.currentPlayer.get(),play)
+        self.playCircle(play)
+        self.currentPlayer.set(3 - self.currentPlayer.get())
+        self.colorArrows()
+        return winner
             
     def onClick(self, event, i):
         """Fonction de réaction à l'évènement <Button-1> sur un rectangle
@@ -261,8 +296,6 @@ class Board(tk.Canvas):
         rectangle dessiné sur le Canvas. Cette fonction vérifie qu'on
         peut jouer, et prend en compte le coup s'il est valide.
         """
-        if self.currentPlayer.get() == 1:
-            self.bot()
         
         if not self.winner:
             if not self.game.canBePlayed(i):
@@ -273,6 +306,8 @@ class Board(tk.Canvas):
                 self.playCircle(i)
                 self.currentPlayer.set(3 - self.currentPlayer.get())
                 self.colorArrows()
+                if not winner:
+                    winner=self.bot()
 
                 if winner:
                     # En cas de gagnant, on fait clignoter la ligne gagnante 4 fois
