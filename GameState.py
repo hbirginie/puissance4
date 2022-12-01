@@ -176,6 +176,18 @@ class GameState:
                 print("The winner is: X")
         else:
             print("The game continues...")
+            
+    def copyGame(self):
+        """Créer une nouvelle partie avec l'état du jeu actuel."""
+        copy = GameState()
+        copy.grid = self.grid
+        copy.highPlayed = self.highPlayed
+        copy.hasWon =self.hasWon
+        copy.winningLine = self.winningLine
+        copy.nbRemainingMoves = self.nbRemainingMoves
+        copy.lastPlayed = self.lastPlayed
+        copy.hasUndo = self.hasUndo
+        return copy
 
 # Quelques tests pour s'assurer que tout cela fonctionne correctement
 if __name__ == "__main__":
@@ -187,3 +199,6 @@ if __name__ == "__main__":
     state.displayWinner()
     state.undo()
     state.textDisplay()
+    print("copy")
+    copystate=state.copyGame()
+    copystate.textDisplay()
