@@ -49,7 +49,7 @@ class GameFrame(tk.Tk):
         menu_main = tk.Menu(menubar)
         menubar.add_cascade(menu=menu_main, label="Main")
         menu_main.add_command(label="Restart", command=self.onRestart)
-        menu_main.add_command(label="Undo", command=self.onUndo)
+        #menu_main.add_command(label="Undo", command=self.onUndo)
         
     def onRestart(self):
         """Fonction de réaction aux évènements du Menu."""
@@ -244,7 +244,7 @@ class Board(tk.Canvas):
         # initialisation du meilleur coup
         bestplay=None
         # regarde si un coup est gagnable
-        copygame = self.game.copyGame()
+        copygame=self.game.copyGame()
         for i in range(7):
             if copygame.canBePlayed(i):
                 copygame.play(self.currentPlayer.get(),i)
@@ -254,9 +254,9 @@ class Board(tk.Canvas):
                         #print("win in ", i)
                         bestplay=play
                 copygame.undo()
-            
+
         # regarde si le prochaine coup de l'adversaire est gagnable
-        copygame = self.game.copyGame()
+        copygame=self.game.copyGame()
         for i in range(7):
             if copygame.canBePlayed(i):
                 copygame.play((3-self.currentPlayer.get()),i)
@@ -266,7 +266,7 @@ class Board(tk.Canvas):
                         #print("loose in ", i)
                         bestplay=play
                 copygame.undo()
-        
+
         # coup aléatoire
         play=randint(0,6)
         while not self.game.canBePlayed(play):
@@ -274,10 +274,17 @@ class Board(tk.Canvas):
         
         # si personne n'a pas joue au milieu : jouer au milieu
         if self.game.highPlayed[3]==6:
-            play=3
-
-        # si personne n'a pas joue au milieu : jouer au milieu
+            bestplay=3
+        
+        # si l'adversaire a joue au milieu : jouer a sa gauche
         if self.game.highPlayed[3]==5 and self.game.nbRemainingMoves==41:
+            play=2
+            
+        # gagner sur la ligne du bas
+        if self.game.highPlayed[1]==6 and self.game.highPlayed[4]==6 and self.game.highPlayed[5]==6:
+            play=4
+        
+        if self.game.highPlayed[1]==6 and self.game.highPlayed[2]==6 and self.game.highPlayed[4]==6 and self.game.highPlayed[5]==6:
             play=2
         
         # si il y a un meilleur coup alors le jouer
@@ -307,6 +314,7 @@ class Board(tk.Canvas):
                 self.currentPlayer.set(3 - self.currentPlayer.get())
                 self.colorArrows()
                 if not winner:
+                    #self.after(500)
                     winner=self.bot()
 
                 if winner:
@@ -324,7 +332,7 @@ class Board(tk.Canvas):
                     self.winnerText.set("Tie !")
                     self.after(1000, self.newGame)
                     self.currentPlayer.set(3 - self.currentPlayer.get())
-                
+
 def main():
     """Fonction principale, qui crée la fenêtre de jeu et lance l'exécution."""
     app = GameFrame()
