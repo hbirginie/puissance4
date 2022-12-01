@@ -244,11 +244,16 @@ class Board(tk.Canvas):
         """Bot
         1) Joue un coup aléatoire
         """
+        # si personne n'a joue au milieu : jouer au milieu
+        # 
+        
         
         play=randint(0,6)
         while not self.game.canBePlayed(play):
             play=randint(0,6)
         print("Le bot joue dans la colonne",play)
+        #self.game.play(self.currentPlayer.get(),play)
+        #self.playCircle(play)
             
     def onClick(self, event, i):
         """Fonction de réaction à l'évènement <Button-1> sur un rectangle
