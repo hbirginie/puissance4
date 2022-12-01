@@ -155,9 +155,9 @@ class Board(tk.Canvas):
         self.winnerText.set("")
         self.game = GameState()
         self.drawGrid()
-        self.makeArrows()
         self.lastStarter = 3 - self.lastStarter
         self.currentPlayer.set(self.lastStarter)
+        self.makeArrows()
         
     def restartGame(self):
         """Recommence la partie à zéro, en effaçant les scores."""
