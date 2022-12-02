@@ -1,9 +1,17 @@
 from GameState import *
 import tkinter as tk
 from tkinter import ttk
-from random import randint
+from random import choice
 
 import sys
+
+def remove_duplicates(lst1,lst2):
+    """Supprime dans lst1 les valeurs de lst1 qui sont dans lst2"""
+    if lst1==lst2:
+        return []
+    for val in lst2:        
+        lst1.remove(val)
+    return lst1
 
 class GameFrame(tk.Tk):
     """Fenetre principale, responsable de l'affichage de la barre de statut
@@ -28,7 +36,7 @@ class GameFrame(tk.Tk):
     """
     def __init__(self):
         super().__init__()
-        self.title("tkPuissance4")
+        self.title("tkPuissance4Bot")
         self.option_add('*tearOff', False)
         
         self.initUI()
@@ -243,6 +251,7 @@ class Board(tk.Canvas):
     def bot(self):
         # initialisation du meilleur coup
         bestplay=None
+
         # regarde si un coup est gagnable
         copygame=self.game.copyGame()
         for i in range(7):
@@ -251,7 +260,6 @@ class Board(tk.Canvas):
                 if copygame.winner():
                     play=i
                     if bestplay==None:
-                        #print("win in ", i)
                         bestplay=play
                 copygame.undo()
 
@@ -263,24 +271,52 @@ class Board(tk.Canvas):
                 if copygame.winner():
                     play=i
                     if bestplay==None:
-                        #print("loose in ", i)
                         bestplay=play
                 copygame.undo()
+                
+        # ne pas jouer un coup pour faire gagner l'adversaire au prochain
+        if bestplay==None:
+            notplay=[]
+            copygame=self.game.copyGame()
+            for i in range(7):
+                if copygame.canBePlayed(i):
+                    copygame.play(self.currentPlayer.get(),i)
+                    copygame2=copygame.copyGame()
+                    for j in range(7):
+                        if copygame2.canBePlayed(j):
+                            copygame2.play((3-self.currentPlayer.get()),j)
+                            if copygame2.winner():
+                                notplay.append(i)
+                                copygame2.hasWon = None
+                            copygame2.undo()
+                    copygame.undo()
 
-        # coup aléatoire
-        play=randint(0,6)
-        while not self.game.canBePlayed(play):
-            play=randint(0,6)
-        
+        # coup aléatoire sauf notplay
+        if bestplay==None:
+            playable=[0,1,2,3,4,5,6]
+            cantplay=[]
+            for i in range(7):
+                if not self.game.canBePlayed(i):
+                    cantplay.append(i)
+                    
+            playable=remove_duplicates(playable,cantplay)
+            playable=remove_duplicates(playable,notplay)
+
+            if len(playable)==0:
+                play=notplay[0]
+                print("Le bot a perdu")
+            
+            else:
+                play=choice(playable)                        
+      
         # si personne n'a pas joue au milieu : jouer au milieu
         if self.game.highPlayed[3]==6:
             bestplay=3
         
-        # si l'adversaire a joue au milieu : jouer a sa gauche
+        # gagner sur la ligne du bas
         if self.game.highPlayed[3]==5 and self.game.nbRemainingMoves==41:
             play=2
-            
-        # gagner sur la ligne du bas
+        
         if self.game.highPlayed[1]==6 and self.game.highPlayed[4]==6 and self.game.highPlayed[5]==6:
             play=4
         
