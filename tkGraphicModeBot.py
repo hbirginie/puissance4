@@ -5,14 +5,6 @@ from random import choice
 
 import sys
 
-def remove_duplicates(lst1,lst2):
-    """Supprime dans lst1 les valeurs de lst1 qui sont dans lst2"""
-    if lst1==lst2:
-        return []
-    for val in lst2:        
-        lst1.remove(val)
-    return lst1
-
 class GameFrame(tk.Tk):
     """Fenetre principale, responsable de l'affichage de la barre de statut
     Attributs: 
@@ -276,7 +268,7 @@ class Board(tk.Canvas):
                 
         # ne pas jouer un coup pour faire gagner l'adversaire au prochain
         if bestplay==None:
-            notplay=[]
+            notplay=set({})
             copygame=self.game.copyGame()
             for i in range(7):
                 if copygame.canBePlayed(i):
@@ -286,21 +278,23 @@ class Board(tk.Canvas):
                         if copygame2.canBePlayed(j):
                             copygame2.play((3-self.currentPlayer.get()),j)
                             if copygame2.winner():
-                                notplay.append(i)
+                                notplay.add(i)
                                 copygame2.hasWon = None
                             copygame2.undo()
                     copygame.undo()
 
         # coup aléatoire sauf notplay
         if bestplay==None:
-            playable=[0,1,2,3,4,5,6]
-            cantplay=[]
+            playable={0,1,2,3,4,5,6}
+            cantplay=set({})
             for i in range(7):
                 if not self.game.canBePlayed(i):
-                    cantplay.append(i)
-                    
-            playable=remove_duplicates(playable,cantplay)
-            playable=remove_duplicates(playable,notplay)
+                    cantplay.add(i)
+            
+            #print(playable,cantplay,notplay)
+            playable = playable.difference(cantplay,notplay)
+            #print(playable)
+            playable = list(playable)
 
             if len(playable)==0:
                 play=notplay[0]
