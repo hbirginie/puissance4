@@ -12,18 +12,18 @@ Pour le mode graphique contre l'ordinateur (tkGraphicModeBot), il suffit de cliq
 
 Le code du puissance4 est répartie en 4 fichiers :
 
-Gamestate.py
+*Gamestate.py*
 
 Ce fichier contient la classe Gamestate qui contient toutes les informations sur l'état d'une partie.
 
-TextMode.py
+*TextMode.py*
 
 Ce fichier contient le code pour l'affichage du jeu dans la console.
 
-tkGraphicMode.py
+*tkGraphicMode.py*
 
 Ce fichier contient le code pour l'affichage graphique du jeu. La partie graphique est codée avec tkInter.
 
-tkGraphicModeBot.py
+*tkGraphicModeBot.py*
 
 Ce fichier contient le code pour l'affichage graphique du jeu. La partie graphique est codée avec tkInter. Ce fichier contient aussi l'implémentation du bot.
