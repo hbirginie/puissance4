@@ -48,22 +48,9 @@ Ce fichier contient le code pour l'affichage graphique du jeu. La partie graphiq
 
 Ce fichier contient le code pour l'affichage graphique du jeu. La partie graphique est codée avec tkInter. Ce fichier contient aussi l'implémentation du bot.
 
-Résumé de l'algorithme du bot :
+\_Résumé de l'algorithme du bot :\_
 
-Premier algorithme : regarder si le bot peut perdre au prochain coup
-
-```
-pour chaque colonne :
-    si le joueur peut jouer dans cette colonne
-        faire jouer le joueur
-        si il y a un gagnant
-            retenir cette colonne comme coup perdant
-        annuler le coup du joueur
-```
-
-Le bot va alors jouer dans cette colonne pour éviter du perdre au prochain tour.
-
-Deuxième algorithme : regarder si le bot peut gagner au prochain coup
+Premier algorithme : regarder si le bot peut gagner au prochain coup
 
 ```
 pour chaque colonne :
@@ -75,3 +62,16 @@ pour chaque colonne :
 ```
 
 Le bot va alors jouer dans cette colonne pour gagner.
+
+Deuxième algorithme : regarder si le bot peut perdre au prochain coup
+
+```
+pour chaque colonne :
+    si le joueur peut jouer dans cette colonne
+        faire jouer le joueur
+        si il y a un gagnant
+            retenir cette colonne comme coup perdant
+        annuler le coup du joueur
+```
+
+Le bot va alors jouer dans cette colonne pour éviter de perdre au prochain tour.
